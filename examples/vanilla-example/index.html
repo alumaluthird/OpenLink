@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenLink Vanilla JS Example</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .wallet-info {
+      background: #f5f5f5;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 8px;
+      border: none;
+      background: #6366f1;
+      color: white;
+      margin: 5px;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>OpenLink Vanilla JS Example</h1>
+    <div id="wallet-button"></div>
+  </header>
+
+  <div id="wallet-info" class="wallet-info hidden">
+    <h3>Wallet Connected</h3>
+    <p><strong>Public Key:</strong> <span id="public-key"></span></p>
+    <p><strong>Balance:</strong> <span id="balance">Loading...</span> SOL</p>
+    
+    <div>
+      <button id="auth-btn">Authenticate</button>
+      <button id="disconnect-btn">Disconnect</button>
+    </div>
+    
+    <p id="auth-status"></p>
+  </div>
+
+  <script src="https://unpkg.com/@openlink/vanilla"></script>
+  <script>
+    // Initialize OpenLink
+    const openlink = new OpenLink({
+      network: 'devnet',
+      appName: 'OpenLink Vanilla Demo'
+    });
+
+    // Create wallet button
+    OpenLink.createWalletButton(openlink, {
+      container: '#wallet-button',
+      onConnect: handleConnect,
+      onDisconnect: handleDisconnect
+    });
+
+    // Handle connection
+    function handleConnect() {
+      document.getElementById('wallet-info').classList.remove('hidden');
+      document.getElementById('public-key').textContent = openlink.publicKey.toString();
+      
+      // Fetch balance
+      fetchBalance();
+    }
+
+    function handleDisconnect() {
+      document.getElementById('wallet-info').classList.add('hidden');
+      document.getElementById('auth-status').textContent = '';
+    }
+
+    async function fetchBalance() {
+      try {
+        const connection = openlink.wallet.getConnection();
+        const balance = await connection.getBalance(openlink.publicKey);
+        const sol = (balance / 1000000000).toFixed(4);
+        document.getElementById('balance').textContent = sol;
+      } catch (error) {
+        document.getElementById('balance').textContent = 'Error';
+      }
+    }
+
+    // Authenticate
+    document.getElementById('auth-btn').addEventListener('click', async () => {
+      try {
+        const { signature, message } = await openlink.signMessage();
+
+        const response = await fetch('http://localhost:3000/api/auth/wallet', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            publicKey: openlink.publicKey.toString(),
+            signature,
+            message
+          })
+        });
+
+        const data = await response.json();
+        
+        if (data.success) {
+          document.getElementById('auth-status').textContent = '✓ Authenticated!';
+          document.getElementById('auth-status').style.color = 'green';
+        } else {
+          document.getElementById('auth-status').textContent = '✗ Authentication failed';
+          document.getElementById('auth-status').style.color = 'red';
+        }
+      } catch (error) {
+        console.error('Auth error:', error);
+        document.getElementById('auth-status').textContent = '✗ Error';
+        document.getElementById('auth-status').style.color = 'red';
+      }
+    });
+
+    // Disconnect
+    document.getElementById('disconnect-btn').addEventListener('click', () => {
+      openlink.disconnect();
+    });
+  </script>
+</body>
+</html>
+
