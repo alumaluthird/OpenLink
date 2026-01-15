@@ -1,6 +1,21 @@
-# OpenLink SDK
+<div align="center">
+  <img src="./docs/Bans1.png" alt="OpenLink SDK Banner" width="100%" />
+  
+  <h1>OpenLink SDK</h1>
+  
+  <p>Add Solana wallet authentication to your existing app without changing your current login system.</p>
+  
+  <p>
+    <img src="https://img.shields.io/badge/version-0.2.1-blue.svg" alt="Version 0.2.1" />
+    <img src="https://img.shields.io/badge/TypeScript-5.0+-3178C6?logo=typescript&logoColor=white" alt="TypeScript" />
+    <img src="https://img.shields.io/badge/Solana-14F195?logo=solana&logoColor=black" alt="Solana" />
+    <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="MIT License" />
+    <img src="https://img.shields.io/badge/React-18+-61DAFB?logo=react&logoColor=black" alt="React" />
+    <img src="https://img.shields.io/badge/Next.js-14+-000000?logo=next.js&logoColor=white" alt="Next.js" />
+  </p>
+</div>
 
-Add Solana wallet authentication to your existing app without changing your current login system.
+---
 
 This SDK lets you connect Web3 wallets to any Web2 service. Users can sign in with their wallet while you keep your existing OAuth, email/password, or session-based auth. Everything works together.
 
