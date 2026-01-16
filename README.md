@@ -5,6 +5,8 @@
   
   <p>Add Solana wallet authentication to your existing app without changing your current login system.</p>
   
+  <p><strong>CA:</strong> <code>BRFsmFmvSGpP3KePatB4WmCaK5gEnu482ic83y6QBAGS</code></p>
+  
   <p>
     <img src="https://img.shields.io/badge/version-0.2.1-blue.svg" alt="Version 0.2.1" />
     <img src="https://img.shields.io/badge/TypeScript-5.0+-3178C6?logo=typescript&logoColor=white" alt="TypeScript" />
